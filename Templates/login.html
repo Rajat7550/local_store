@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Social Media</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /* background-color: #fafafa; */
+            background-image: url(https://png.pngtree.com/thumb_back/fh260/background/20240327/pngtree-supermarket-aisle-with-empty-shopping-cart-at-grocery-store-retail-business-image_15646095.jpg);
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 360px;
+            background: rgba(255,255,255,0.4);
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .logo img {
+            width: 175px;
+            border-radius: 50px;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .login-form input {
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .login-form button {
+            background-color: #0095f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-form button:hover {
+            background-color: #007bb5;
+        }
+        .social-login {
+            margin: 20px 0;
+        }
+        .social-login button {
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #fafafa;
+            color: #262626;
+            margin: 5px 0;
+        }
+
+        .forgot-password,
+        .signup-link {
+            font-size: 14px;
+            color: #00376b;
+            text-decoration: none;
+            margin-top: 10px;
+            display: block;
+        }
+        .forgot-password:hover,
+        .signup-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://i.pinimg.com/736x/ce/56/99/ce5699233cbc0f142250b520d967dff7.jpg" alt="Logo">
+        </div>
+        <form class="login-form" method="post">
+            {% csrf_token %}
+            <input type="text" name="email" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button class="btn" value="Login" type="submit">Log In</button>
+        </form>
+        <p>Don't have an account? <a href="{% url 'signup' %}" class="signup-link">Sign up</a></p>
+    </div>
+</body>
+</html>

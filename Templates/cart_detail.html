@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <script src="script.js"></script> <!-- Link to external JavaScript file -->
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 96px;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #fff;
+        }
+
+        .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .cart-container {
+            width: 80%;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .cart-product {
+            display: flex;
+            align-items: center;
+            flex: 2;
+        }
+
+        .cart-product img {
+            width: 120px;
+            height: 96px;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 10px;
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
+            font-size: 25px;
+            color: #fff;
+        }
+
+        .product-price {
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .quantity-total {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-total input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .product-total {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .cart-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 20px;
+        }
+
+        .cart-summary {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 300px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .checkout-btn,
+        .continue-shopping-btn {
+            width: 100%;
+            max-width: 300px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .continue-shopping-btn {
+            background-color: #17a2b8;
+        }
+
+        .checkout-btn:hover {
+            background-color: #218838;
+        }
+
+        .continue-shopping-btn:hover {
+            background-color: #138496;
+        }
+    </style>
+</head>
+<body>
+    <video class="background-video" autoplay loop muted>
+        <source src="https://media.istockphoto.com/id/1305498256/video/close-up-leg-of-woman-walking-shopping-bag.mp4?s=mp4-640x640-is&k=20&c=UbfmktWkZDCV4bfLD7NNFcVDiCCXM5Q_31oLxi5TAT4=" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="cart-container">
+        <h1>Shopping Cart</h1>
+        {% if cart_items %}
+            {% for item in cart_items %}
+                <div class="cart-items">
+                    <div class="cart-item">
+                        <div class="cart-product">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                            <div class="product-details">
+                                <span class="product-name">{{ item.product.name }}</span>
+                                <span class="product-price">${{ item.product.price }}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                            <a href="{% url 'decrease_quantity' item.pk %}" style="padding: 5px 10px; background-color: #dc3545; color: #fff; border: none; border-radius: 5px; text-decoration: none; font-size: 1em;">-</a>
+                            <span>{{ item.quantity }}</span>
+                            <a href="{% url 'increase_quantity' item.pk %}" style="padding: 5px 10px; background-color: #28a745; color: #fff; border: none; border-radius: 5px; text-decoration: none; font-size: 1em;">+</a>
+                            <a href="{% url 'remove_from_cart' item.pk %}" style="padding: 5px 10px; background-color: #ff4d4f; color: #fff; border: none; border-radius: 5px; text-decoration: none; font-size: 1em;">Remove</a>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                            <p style="font-size: 1.2em; font-weight: bold; color: #fff; margin: 0;">${{ item.total_price }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- Repeat .cart-item div for each product in the cart -->
+            <div class="cart-footer">
+                <div class="cart-summary">
+                    <span class="cart-total-label">Subtotal:</span>
+                    <span class="cart-total-price">Total: ${{ total }}</span>
+                </div>
+                <a href="{% url 'preorder' %}" style="width:300px;cursor: pointer;"><button class="checkout-btn">Proceed to Checkout</button></a>
+                <a href="{% url 'product_list' %}" style="width:300px;cursor: pointer;"><button class="continue-shopping-btn">Continue Shopping</button></a>
+            </div>
+        {% else %}
+            <p style="font-size: 1.2em; color: #fff; text-align: center;">Your cart is empty.</p>
+            <a href="{% url 'product_list' %}" style="width:300px;cursor: pointer;"><button class="continue-shopping-btn" style="margin-left: 250px;">Continue Shopping</button></a>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+
+
+
+
+
